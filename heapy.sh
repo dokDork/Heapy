@@ -4,6 +4,8 @@
 OUTPUT_FILE="memory_dump_TOT.bin"
 TEMP_FILE="memory_dump_PARZ.bin"
 STRINGS_OUTPUT_FILE="out_strings.txt"
+PASS_OUTPUT_FILE="out_passwords.txt"
+USER_OUTPUT_FILE="out_users.txt"
 # --- End Configuration ---
 
 # Function to display usage and an explanation of the parameter
@@ -31,6 +33,8 @@ usage() {
 if [ "$#" -eq 0 ]; then
     usage
 fi
+
+rm -f "$OUTPUT_FILE" "$TEMP_FILE" "$STRINGS_OUTPUT_FILE" "$PASS_OUTPUT_FILE" "$USER_OUTPUT_FILE"
 
 MIN_STRING_LENGTH=""
 while getopts ":l:" opt; do
@@ -159,21 +163,36 @@ fi
 
 # --- String Analysis ---
 if [ "$found_memory" = true ]; then
-    echo ""
+echo ""
     echo "Starting string analysis on $OUTPUT_FILE..."
 
-    password_keywords="password|passwd|pass|pwd|secret|key|token"
+    ASSIGN_OPS='\s*[=:]\s*(?![0-9/.])'
+
+    password_keywords="password|passwd|pass|pwd|secret|key|token|api_key|apikey|access_key|private_key|auth|credential|cred|bearer|authorization|session|cookie|hash|salt|pin|code"
+    username_keywords="username|user_name|userid|user_id|uname|login|logon|account|uid|usr|user"
+
+    password_pattern="\b(${password_keywords})\b${ASSIGN_OPS}.{3,}"
+    username_pattern="\b(${username_keywords})\b${ASSIGN_OPS}.{3,}"
 
     echo "--- Strings longer than $MIN_STRING_LENGTH characters ---" | tee -a "$STRINGS_OUTPUT_FILE"
     strings -n "$MIN_STRING_LENGTH" "$OUTPUT_FILE" | tee -a "$STRINGS_OUTPUT_FILE"
-
     echo "" | tee -a "$STRINGS_OUTPUT_FILE"
 
-    echo "--- Potential password-related strings ---" | tee -a "$STRINGS_OUTPUT_FILE"
-    strings -n "$MIN_STRING_LENGTH" "$OUTPUT_FILE" | grep -iE "$password_keywords" | tee -a "$STRINGS_OUTPUT_FILE"
+    echo "--- Potential password-related strings ---" | tee -a "$PASS_OUTPUT_FILE"
+    strings -n "$MIN_STRING_LENGTH" "$OUTPUT_FILE" | grep -iP "$password_pattern" | tee -a "$PASS_OUTPUT_FILE"
+    echo "" | tee -a "$PASS_OUTPUT_FILE"
+
+    echo "--- Potential username-related strings ---" | tee -a "$USER_OUTPUT_FILE"
+    strings -n "$MIN_STRING_LENGTH" "$OUTPUT_FILE" | grep -iP "$username_pattern" | tee -a "$USER_OUTPUT_FILE"
+    echo "" | tee -a "$USER_OUTPUT_FILE"
 
     echo ""
     echo "Analysis complete. Results saved in $STRINGS_OUTPUT_FILE"
+    echo "Analysis complete. Results saved in $PASS_OUTPUT_FILE"
+    echo "Analysis complete. Results saved in $USER_OUTPUT_FILE"
+
+    echo "DEBUG password_pattern: $password_pattern"
+    echo "DEBUG username_pattern: $username_pattern"    
 else
     echo "Skipping string analysis as no memory was dumped."
 fi
