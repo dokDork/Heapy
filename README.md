@@ -1,6 +1,6 @@
 # Heapy
 [![License](https://img.shields.io/badge/license-MIT-_red.svg)](https://opensource.org/licenses/MIT)  
-<img src="https://github.com/dokDork/Heapy/raw/main/images/heapy.png" width="400">  
+<img src="https://github.com/dokDork/Heapy/raw/main/images/heapy.png" width="500">  
 
 
 ## Disclaimer
