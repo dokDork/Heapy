@@ -25,6 +25,6 @@ It's very simple
 cd /opt
 sudo git clone https://github.com/dok72/Heapy.git
 cd Heapy 
-chmod 755 heapy.py 
+chmod 755 heapy.sh
 ./heapy.sh
 ```
