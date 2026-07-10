@@ -14,8 +14,10 @@ Unauthorized use is strictly prohibited. The author assumes no responsibility fo
   
 ## Example Usage
  ```
-./heapy.py -l 10
+./heapy.sy -l 10
  ``` 
+-l parameter sets the minimum length for a string to be considered 'interesting' and extracted from memory. Memory dumps contain a huge amount of binary data and very short, meaningless strings. By setting a minimum length, you filter out the noise and focus on data that is more likely to be useful, such as passwords, keys, URLs, or configuration parameters.
+
   
 ## How to install it on Kali Linux (or Debian distribution)
 It's very simple  
