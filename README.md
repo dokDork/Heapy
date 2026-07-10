@@ -18,6 +18,11 @@ Unauthorized use is strictly prohibited. The author assumes no responsibility fo
  ``` 
 -l parameter sets the minimum length for a string to be considered 'interesting' and extracted from memory. Memory dumps contain a huge amount of binary data and very short, meaningless strings. By setting a minimum length, you filter out the noise and focus on data that is more likely to be useful, such as passwords, keys, URLs, or configuration parameters.
 
+At the end a set of files will be generated:
+- out_strings.txt: containing all the strings found,
+- out_passwords.txt: containing the possible passwords found,
+- out_users.txt: containing the possible usernames found.
+
   
 ## How to install it on Kali Linux (or Debian distribution)
 It's very simple  
